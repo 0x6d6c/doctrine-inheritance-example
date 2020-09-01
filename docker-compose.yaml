@@ -1,0 +1,39 @@
+version: '3.7'
+
+networks:
+    &network doctrine_inheritance_example:
+        name: *network
+        driver: bridge
+
+services:
+    &mysql doctrine_inheritance_example-mysql:
+        container_name: *mysql
+        build: ./.docker/build/mysql
+        image: *mysql
+        networks:
+            - *network
+        ports:
+            - '3333:3306'
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+        volumes:
+            - ./.docker/persist/mysql:/var/lib/mysql
+
+    &php doctrine_inheritance_example-php:
+        container_name: *php
+        build: .docker/build/php
+        image: *php
+        networks:
+            - *network
+        ports:
+            - '8333:80'
+        restart: always
+        depends_on:
+            - *mysql
+        environment:
+            - TZ=Europe/Warsaw
+            - APACHE_RUN_USER=#1000
+            - APACHE_RUN_GROUP=#1000
+        volumes:
+            - .:/var/www/html/
