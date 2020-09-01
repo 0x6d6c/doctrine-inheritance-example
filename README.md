@@ -85,6 +85,8 @@ classes. With this strategy generated schema contains individual tables for each
 
 Prerequisites for installation are PHP 7.1, Composer and a supported database (Postgres, MariaDB, MySQL, SQLite...).
 
+Alternatively, you can use Docker/Docker Compose (see [below](#installation-and-set-up-with-docker)).
+
 The first step is to copy the `.env.dist` to `.env` and configure a working database connection.
 
 Once this is done, proceed with installing packages and setting up the database:
@@ -102,5 +104,26 @@ $ make serve
 ```
 
 You can find the entity administration interface (using EasyAdminBundle) in http://localhost:8000/admin
+
+### Installation and set-up with Docker
+If you want to use Docker, run:
+```
+$ docker-compose up -d --build
+```
+
+SSH into the running container:
+```
+$ docker exec --interactive --tty doctrine_inheritance_example-php bash
+```
+
+Set up the project:
+
+```
+$ composer install
+$ ./bin/console doctrine:database:create
+$ ./bin/console doctrine:schema:update
+```
+
+You can find the entity administration interface (using EasyAdminBundle) in http://localhost:8333/admin
 
 Create some entities and observe the database schema and entities.
